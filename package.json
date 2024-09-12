@@ -1,0 +1,19 @@
+{
+  "name": "bob-cards-api",
+  "version": "1.0.0",
+  "description": "BobCards API",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run wp-env:start",
+    "wp-env:path": "wp-env install-path",
+    "wp-env:plugins": "wp-env run cli wp plugin install wordpress-importer",
+    "wp-env:start": "wp-env start --update",
+    "wp-env:stop": "wp-env stop"
+  },
+  "author": "Hasani Rogers <dev@hasanirogers.me>",
+  "license": "ISC",
+  "devDependencies": {
+    "@wordpress/env": "^10.6.0",
+    "prettier": "^2.7.1"
+  }
+}
