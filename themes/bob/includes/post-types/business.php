@@ -12,7 +12,7 @@ function add_business_post_type()
     'has_archive' => false,
     'show_in_rest' => true,
     'taxonomies' => array('category', 'states'),
-    'supports' => array('title', 'editor', 'custom-fields')
+    'supports' => array('title', 'custom-fields', 'author'),
   ));
 }
 

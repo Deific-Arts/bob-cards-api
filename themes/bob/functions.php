@@ -25,7 +25,7 @@ if (!class_exists('bob\Theme')) {
 
       $classes = preg_grep('/^([^.])/', scandir(get_template_directory() . '/includes/classes'));
       $postTypes = preg_grep('/^([^.])/', scandir(get_template_directory() . '/includes/post-types'));
-      $taxonomies = preg_grep('/^([^.])/', scandir(get_template_directory() . '/includes/taxonomies'));
+      // $taxonomies = preg_grep('/^([^.])/', scandir(get_template_directory() . '/includes/taxonomies'));
 
       foreach ($classes as $class) {
         require_once(get_template_directory() . '/includes/classes/' . $class);
@@ -35,9 +35,9 @@ if (!class_exists('bob\Theme')) {
         require_once(get_template_directory() . '/includes/post-types/' . $postType);
       }
 
-      foreach ($taxonomies as $taxonomy) {
-        require_once(get_template_directory() . '/includes/taxonomies/' . $taxonomy);
-      }
+      // foreach ($taxonomies as $taxonomy) {
+      //   require_once(get_template_directory() . '/includes/taxonomies/' . $taxonomy);
+      // }
 
       // Hooks
       // -----
@@ -62,6 +62,24 @@ if (!class_exists('bob\Theme')) {
 
       // add user id and role to jwt response
       add_filter('jwt_auth_token_before_dispatch', array($this, 'add_user_id_and_role_to_jwt_response'), 10, 2);
+
+      // use custom profile image
+      add_filter('pre_get_avatar', array($this, 'add_pre_get_avatar'), 10, 5);
+
+      // add profile image to meta in REST response
+      register_meta('user', 'bob_profile_image', array(
+        'type' => 'string',
+        'show_in_rest' => true
+      ));
+
+      // add profile image id to meta in REST response
+      register_meta('user', 'bob_profile_image_id', array(
+        'type' => 'string',
+        'show_in_rest' => true
+      ));
+
+      // add custom post metadata
+      add_action('init', array($this, 'add_custom_post_metadata'));
     }
 
     public static function disable_wp_embed()
@@ -99,6 +117,38 @@ if (!class_exists('bob\Theme')) {
       $data['user_id'] = $user->data->ID;
       $data['role'] = $user->roles[0];
       return $data;
+    }
+
+    public static function add_pre_get_avatar($avatar, $id_or_email)
+    {
+      if (is_numeric($id_or_email)) {
+        $user_id = $id_or_email;
+      } else {
+        $user = get_user_by('email', $id_or_email);
+        $user_id = $user->ID;
+      }
+
+      $profile_image = get_user_meta($user_id, 'bob_profile_image', true);
+
+      if (!empty($profile_image)) {
+        $avatar = "<img src='" . $profile_image . "' alt='Profile Image' />";
+      }
+
+      return $avatar;
+    }
+
+    public static function add_custom_post_metadata()
+    {
+      // we need to use register_post_meta for custom post types
+      register_post_meta(
+        'business',
+        'bob_fsq_id',
+        array(
+          'single'       => true,
+          'type'         => 'string',
+          'show_in_rest' => true,
+        )
+      );
     }
   }
 }
