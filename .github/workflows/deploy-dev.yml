@@ -1,8 +1,8 @@
-name: deploy
+name: deploy-dev
 on:
   push:
     branches:
-      - main
+      - develop
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -12,9 +12,9 @@ jobs:
       - name: Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_DEPLOY_HOST }}
-          username: ${{ secrets.FTP_DEPLOY_USERNAME }}
-          password: ${{ secrets.FTP_DEPLOY_PASSWORD }}
-          port: ${{ secrets.FTP_DEPLOY_PORT }}
+          server: ${{ secrets.FTP_DEPLOY_HOST_DEV }}
+          username: ${{ secrets.FTP_DEPLOY_USERNAME_DEV }}
+          password: ${{ secrets.FTP_DEPLOY_PASSWORD_DEV }}
+          port: ${{ secrets.FTP_DEPLOY_PORT_DEV }}
           local-dir: "./themes/bob/"
           server-dir: "./wp-content/themes/bob/"
