@@ -8,8 +8,9 @@
     "wp-env:log": "wp-env logs development",
     "wp-env:path": "wp-env install-path",
     "wp-env:plugins": "wp-env run cli wp plugin install wordpress-importer",
-    "wp-env:start": "wp-env start --update",
-    "wp-env:stop": "wp-env stop"
+    "wp-env:start": "wp-env start",
+    "wp-env:stop": "wp-env stop",
+    "wp-env:update": "wp-env start --update"
   },
   "author": "Hasani Rogers <dev@hasanirogers.me>",
   "license": "ISC",
